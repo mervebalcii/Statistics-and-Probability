@@ -6,6 +6,8 @@
 package staticproject;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import static java.lang.Math.random;
@@ -29,11 +31,13 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 
@@ -45,6 +49,7 @@ import org.jfree.data.statistics.HistogramType;
  */
 public class Statics extends javax.swing.JFrame {
     DefaultListModel list= new DefaultListModel();
+   
 
     /**
      * Creates new form Statics
@@ -80,7 +85,26 @@ public class Statics extends javax.swing.JFrame {
         }
          
      }
-   
+   private static final String ROW_KEY = "Liveness";
+
+    private void display() {
+        JFrame f = new JFrame("BoxPlot");
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        DefaultBoxAndWhiskerCategoryDataset data = new DefaultBoxAndWhiskerCategoryDataset();
+        data.add(nums, ROW_KEY, " ");
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(
+            "Box and Whisker Chart", ROW_KEY, " ", data, false);
+        f.add(new ChartPanel(chart) {
+
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(320, 480);
+            }
+        });
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+    }
      
 
     /**
@@ -340,10 +364,10 @@ public class Statics extends javax.swing.JFrame {
          Arrays.sort(sortL);
          System.out.println(Arrays.toString(sortL));       
          if(len%2==0){
-             meadian=(sortL[(len-1)/2] + sortL[len/2])/2.0;
-             
+             meadian=(sortL[(len-1)/2] + sortL[len/2])/2.0; 
          }else{
              meadian=sortL[(len+1)/2-1]/1.0; 
+           
          } 
          jLabel2.setText(String.valueOf(meadian));
          System.out.println(meadian);
@@ -402,12 +426,9 @@ public class Statics extends javax.swing.JFrame {
       } 
         int len=nums.size();
         mean=sum/len;
-        
          double[] sortL=new double[len];
          for (int i = 0; i < len; i++) {
-             sortL[i]=nums.get(i);
-             
-            
+             sortL[i]=nums.get(i);     
         }
          Arrays.sort(sortL);
          System.out.println(Arrays.toString(sortL));
@@ -440,8 +461,6 @@ public class Statics extends javax.swing.JFrame {
          double[] sortL=new double[len];
          for (int i = 0; i < len; i++) {
              sortL[i]=nums.get(i);
-             
-         
         }
           Arrays.sort(sortL);
          System.out.println(Arrays.toString(sortL));
@@ -449,9 +468,6 @@ public class Statics extends javax.swing.JFrame {
          int end_q3=len-1;
          int start_q3=(len) / 2;
          double q1,q3=0;
-         
-         
-        
          if(len % 2 == 1){
              
            double value1 = sortL[(end_q1 + 0) / 2];
@@ -462,10 +478,7 @@ public class Statics extends javax.swing.JFrame {
            
              q3= (value + value22) /2; 
              System.out.println(q1);
-             System.out.println(q3); 
-              
-             
-             
+             System.out.println(q3);  
          }else{
               q1=(sortL[(end_q1+0)/2]);
               q3=(sortL[(end_q3+start_q3)/2]);
@@ -477,33 +490,17 @@ public class Statics extends javax.swing.JFrame {
          double iqr=q3-q1;
          double dstnc_q1= q1-(iqr*(1.5));
          double dstnc_q3= q3+(iqr*(1.5));
-         System.out.println("["+ dstnc_q1 +"  "+dstnc_q3+ "]" );
-         
-       
-        
+         System.out.println("["+ dstnc_q1 +"  "+dstnc_q3+ "]" );      
          for (int i = 0; i < len; i++) {
              
              if(sortL[i]<dstnc_q1 || sortL[i]>dstnc_q3){
                  list.addElement(sortL[i]);
               
-              System.out.println(sortL[i]);
-             
-                
-                      
+              System.out.println(sortL[i]);                    
           }
-             
-         
         }
-        
-         jTextArea1.setText("q1="+ String.valueOf(q1) +"\nq3="+String.valueOf(q3)+ "\niqr = "+String.valueOf(iqr) +"\n["+ dstnc_q1 +"  "+dstnc_q3+ "]" + "\n"+String.valueOf(list)+"\n");
+    jTextArea1.setText("q1="+ String.valueOf(q1) +"\nq3="+String.valueOf(q3)+ "\niqr = "+String.valueOf(iqr) +"\n["+ dstnc_q1 +"  "+dstnc_q3+ "]" + "\n"+String.valueOf(list)+"\n");
 
-        
-         
-      
-        
-        
-        
-        
     }//GEN-LAST:event_outlier_btnActionPerformed
 
     private void histogram_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_histogram_btnActionPerformed
@@ -538,9 +535,7 @@ public class Statics extends javax.swing.JFrame {
         int len=nums.size();
          double[] sortL=new double[len];
          for (int i = 0; i < len; i++) {
-             sortL[i]=nums.get(i);
-             
-         
+             sortL[i]=nums.get(i);     
         }
          Arrays.sort(sortL);
          double q2=0;
@@ -549,57 +544,40 @@ public class Statics extends javax.swing.JFrame {
              
          }else{
              q2=sortL[(len+1)/2-1]/1.0;
-       
-          
-         } 
-         
+     }         
          int end_q1=len/2-1;
          int end_q3=len-1;
          int start_q3=(len) / 2;
          double q1,q3=0;
          if(len % 2 == 1){
-             
            double value1 = sortL[(end_q1 + 0) / 2];
             double value2 = sortL[(end_q1 + 0) / 2 + 1];
              q1= (value1 + value2) / 2; 
             double value = sortL[(end_q3 + start_q3) / 2];
             double value22 = sortL[(end_q3 + start_q3) / 2 + 1];
-           
              q3= (value + value22) /2; 
-         
-             
-         }else{
+             }else{
               q1=(sortL[(end_q1+0)/2]);
               q3=(sortL[(end_q3+start_q3)/2]);
-      
          }
-         
          double iqr=q3-q1;
          double dstnc_q1= q1-(iqr*(1.5));
          double dstnc_q3= q3+(iqr*(1.5));
          System.out.println("["+ dstnc_q1 +"  "+dstnc_q3+ "]" );
-         
-       
-        
-         for (int i = 0; i < len; i++) {
+             for (int i = 0; i < len; i++) {
              
              if(sortL[i]<dstnc_q1 || sortL[i]>dstnc_q3){
                  list.addElement(sortL[i]);
       
           }
-             
-             
-         
-        }
-         
+               }
          double min=0;
          double maks=0;
          for (int i = 0; i < len; i++) {
-             
              if(sortL[i]>dstnc_q1 && sortL[i]<dstnc_q3){
-
              min=(double) sortL[0];
              maks=(double) sortL[i];
+                 
            
           }    
             }  
@@ -610,13 +588,12 @@ public class Statics extends javax.swing.JFrame {
          System.out.println("---|min="+ min + "   | q1="+ q1+ "   | q2="+ q2+ "   | q3="+ q3+ "   |---maks"+ maks+ "        outliers "+list );
          jTextArea2.setText("---min="+ min + "|  q1="+ q1+ "   | q2="+ q2+ "   | q3="+ q3+ "   |---maks"+ maks+ "        outliers "+list);
              
-      
+        EventQueue.invokeLater(new Statics()::display);
         
     }//GEN-LAST:event_boxplot_btnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-      
         double topl=0;
         double arr[]={ 19.0,18.0,15.0,11.0, 9.0, 6.0};
         for (int i = 0; i < 6; i++) {
@@ -629,13 +606,10 @@ public class Statics extends javax.swing.JFrame {
           sum = sum+num;
       } 
         double len=nums.size();
-        mean=sum/len;
-        
-        
+        mean=sum/len;     
          double temp = 0;
         for(double a :nums)
             temp += (a-mean)*(a-mean);
-   
         variance= temp/(len);
         System.out.println(variance);
         standartD=  Math.sqrt(variance);        
@@ -647,7 +621,6 @@ public class Statics extends javax.swing.JFrame {
         double dist1=mean_-(zalph)*(standartD/Math.sqrt(6));
         double dist2=mean_+(zalph)*standartD/Math.sqrt(6);
         System.out.println(dist1+"   "+ dist2);
-       
        jLabel7.setText(String.valueOf("   ["+(int)dist1 +"  " +(int) dist2)+ "]");        
         
         
@@ -656,24 +629,19 @@ public class Statics extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
 
-double sum=0;
+        double sum=0;
         for( double num : nums) {
           sum = sum+num;
       } 
         double len=nums.size();
-        mean=sum/len;
-         
-      
+        mean=sum/len;      
         double temp = 0;
         for(double a :nums)
-            temp += (a-mean)*(a-mean);
-   
+            temp += (a-mean)*(a-mean);  
         variance= temp/(len);
         System.out.println("vryns"+variance);
-        standartD=  Math.sqrt(variance);
-        
-        System.out.println("stnd d"+standartD); 
-        
+        standartD=  Math.sqrt(variance);   
+        System.out.println("stnd d"+standartD);  
         double delta=0.1;
         double zalph=1.645;
         System.out.println("stdr"+standartD);
@@ -695,8 +663,7 @@ double sum=0;
 
     private void confIntVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confIntVActionPerformed
         // TODO add your handling code here:
-        
-        double array[] = {19.0,18.0,15.0,11.0, 9.0, 6.0};
+          double array[] = {19.0,18.0,15.0,11.0, 9.0, 6.0};
         int n = array.length;
         double sum = 0, alpha;
         for (int i = 0; i < array.length; i++) {
